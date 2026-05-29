@@ -54,81 +54,145 @@ export default function DashboardClient({ session, bookings }) {
       style={{
         minHeight: '100vh',
         background: '#E5EEE4',
-        paddingTop: 'clamp(70px, 10vw, 90px)',
+        paddingTop: '90px',
       }}
     >
-      {/* Header */}
+      {/* ───────── Animated Hero Header ───────── */}
       <div
         style={{
           background: '#C0E1D2',
-          padding: 'clamp(40px, 7vw, 60px) clamp(16px, 4vw, 24px)',
+          padding: 'clamp(50px, 7vw, 80px) clamp(16px, 4vw, 24px)',
+          position: 'relative',
+          overflow: 'hidden',
         }}
       >
-        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+        {/* Animated background circles */}
+        {[...Array(3)].map((_, i) => (
+          <motion.div
+            key={i}
+            animate={{ scale: [1, 1.1, 1], opacity: [0.05, 0.12, 0.05] }}
+            transition={{ duration: 4 + i, repeat: Infinity }}
+            style={{
+              position: 'absolute',
+              borderRadius: '50%',
+              background: '#3E2C23',
+              width: `${250 + i * 100}px`,
+              height: `${250 + i * 100}px`,
+              left: `${10 + i * 25}%`,
+              top: `${-30 + i * 20}%`,
+              pointerEvents: 'none',
+            }}
+          />
+        ))}
+
+        <div
+          style={{
+            maxWidth: '1100px',
+            margin: '0 auto',
+            position: 'relative',
+            zIndex: 1,
+          }}
+        >
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: 'clamp(12px, 3vw, 16px)',
+              gap: 'clamp(14px, 3vw, 20px)',
               flexWrap: 'wrap',
             }}
           >
-            <div
+            <motion.div
+              initial={{ scale: 0, rotate: -180 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ type: 'spring', delay: 0.2, damping: 12 }}
               style={{
-                width: 'clamp(50px, 8vw, 60px)',
-                height: 'clamp(50px, 8vw, 60px)',
+                width: 'clamp(60px, 9vw, 75px)',
+                height: 'clamp(60px, 9vw, 75px)',
                 borderRadius: '50%',
                 background: '#DE802B',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: 'clamp(18px, 3vw, 22px)',
+                fontSize: 'clamp(22px, 3.5vw, 28px)',
                 fontWeight: 800,
                 color: '#3E2C23',
                 flexShrink: 0,
+                boxShadow: '0 10px 28px rgba(222,128,43,0.45)',
+                border: '3px solid #FFFFFF',
               }}
             >
               {session.user.name?.[0]?.toUpperCase() || 'U'}
-            </div>
+            </motion.div>
             <div style={{ minWidth: 0, flex: 1 }}>
-              <h1
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 }}
                 style={{
-                  fontSize: 'clamp(20px, 3.5vw, 28px)',
-                  fontWeight: 800,
-                  color: '#3E2C23',
-                  marginBottom: '4px',
-                  lineHeight: 1.2,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  background: 'rgba(222, 128, 43, 0.15)',
+                  border: '1px solid rgba(222, 128, 43, 0.3)',
+                  borderRadius: '50px',
+                  padding: '4px 12px',
+                  fontSize: '11px',
+                  color: '#DE802B',
+                  marginBottom: '10px',
+                  fontWeight: 700,
+                  letterSpacing: '1px',
+                  textTransform: 'uppercase',
                 }}
               >
-                Welcome back, {session.user.name?.split(' ')[0]}!
+                <Award size={12} /> Dashboard
+              </motion.div>
+              <h1
+                style={{
+                  fontSize: 'clamp(22px, 4vw, 34px)',
+                  fontWeight: 800,
+                  color: '#3E2C23',
+                  marginBottom: '6px',
+                  lineHeight: 1.2,
+                  letterSpacing: '-0.5px',
+                }}
+              >
+                Welcome back, {session.user.name?.split(' ')[0]}! 👋
               </h1>
               <p
                 style={{
                   color: '#3E2C23',
-                  fontSize: 'clamp(12px, 2vw, 14px)',
+                  fontSize: 'clamp(13px, 2vw, 15px)',
                   wordBreak: 'break-word',
                   display: 'flex',
                   alignItems: 'center',
                   flexWrap: 'wrap',
-                  gap: '8px',
+                  gap: '10px',
+                  opacity: 0.85,
+                  fontWeight: 500,
                 }}
               >
                 <span>{session.user.email}</span>
                 {session.user.role === 'admin' && (
-                  <span
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.5, type: 'spring' }}
                     style={{
-                      background: '#DE802B',
-                      color: '#3E2C23',
-                      padding: '2px 10px',
+                      background: '#3E2C23',
+                      color: '#DE802B',
+                      padding: '3px 12px',
                       borderRadius: '50px',
                       fontSize: '11px',
                       fontWeight: 800,
+                      letterSpacing: '0.5px',
+                      boxShadow: '0 4px 12px rgba(62,44,35,0.25)',
                     }}
                   >
-                    ADMIN
-                  </span>
+                    🛡️ ADMIN
+                  </motion.span>
                 )}
               </p>
             </div>
@@ -136,6 +200,7 @@ export default function DashboardClient({ session, bookings }) {
         </div>
       </div>
 
+      {/* Main Content */}
       <div
         style={{
           maxWidth: '1100px',
@@ -188,6 +253,7 @@ export default function DashboardClient({ session, bookings }) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
+              whileHover={{ y: -4 }}
               style={{
                 background: '#FFFFFF',
                 borderRadius: '20px',
@@ -197,7 +263,16 @@ export default function DashboardClient({ session, bookings }) {
                 alignItems: 'center',
                 gap: '14px',
                 border: '1px solid rgba(62,44,35,0.06)',
+                transition: 'box-shadow 0.3s',
               }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.boxShadow =
+                  '0 12px 32px rgba(62,44,35,0.15)')
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.boxShadow =
+                  '0 2px 16px rgba(62,44,35,0.08)')
+              }
             >
               <div
                 style={{
@@ -244,8 +319,9 @@ export default function DashboardClient({ session, bookings }) {
         {/* Admin Link */}
         {session.user.role === 'admin' && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
             style={{
               background: '#3E2C23',
               borderRadius: '20px',
@@ -257,9 +333,26 @@ export default function DashboardClient({ session, bookings }) {
               flexWrap: 'wrap',
               gap: '16px',
               boxShadow: '0 8px 24px rgba(62,44,35,0.2)',
+              position: 'relative',
+              overflow: 'hidden',
             }}
           >
-            <div style={{ minWidth: 0, flex: 1 }}>
+            {/* Decorative circle */}
+            <motion.div
+              animate={{ scale: [1, 1.1, 1], opacity: [0.1, 0.2, 0.1] }}
+              transition={{ duration: 5, repeat: Infinity }}
+              style={{
+                position: 'absolute',
+                right: '-60px',
+                top: '-60px',
+                width: '200px',
+                height: '200px',
+                borderRadius: '50%',
+                background: '#DE802B',
+                pointerEvents: 'none',
+              }}
+            />
+            <div style={{ minWidth: 0, flex: 1, position: 'relative', zIndex: 1 }}>
               <div
                 style={{
                   fontSize: 'clamp(16px, 2.5vw, 18px)',
@@ -279,7 +372,10 @@ export default function DashboardClient({ session, bookings }) {
                 Manage services, gallery and view all bookings
               </div>
             </div>
-            <Link href="/admin" style={{ textDecoration: 'none' }}>
+            <Link
+              href="/admin"
+              style={{ textDecoration: 'none', position: 'relative', zIndex: 1 }}
+            >
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -342,6 +438,7 @@ export default function DashboardClient({ session, bookings }) {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '6px',
+                  boxShadow: '0 4px 12px rgba(222,128,43,0.3)',
                 }}
               >
                 + New Booking
@@ -445,7 +542,10 @@ export default function DashboardClient({ session, bookings }) {
                         justifyContent: 'space-between',
                         flexWrap: 'wrap',
                         gap: '16px',
-                        marginBottom: booking.adminNotes || booking.meetingDate ? '14px' : '0',
+                        marginBottom:
+                          booking.adminNotes || booking.meetingDate
+                            ? '14px'
+                            : '0',
                       }}
                     >
                       <div style={{ minWidth: 0, flex: 1 }}>
@@ -531,11 +631,7 @@ export default function DashboardClient({ session, bookings }) {
                           flexWrap: 'wrap',
                         }}
                       >
-                        <div
-                          style={{
-                            textAlign: 'right',
-                          }}
-                        >
+                        <div style={{ textAlign: 'right' }}>
                           <div
                             style={{
                               fontSize: '10px',
@@ -705,4 +801,4 @@ export default function DashboardClient({ session, bookings }) {
       </div>
     </div>
   )
-}
+} 

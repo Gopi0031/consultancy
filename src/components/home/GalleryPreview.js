@@ -137,7 +137,7 @@ export default function GalleryPreview({ gallery, totalCount = 0 }) {
                 opacity: 0.7,
               }}
             >
-              Admin can upload gallery images from the Admin Panel
+              Admin can upload gallery images
             </p>
           </motion.div>
         ) : (

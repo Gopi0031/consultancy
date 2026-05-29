@@ -327,7 +327,7 @@ const filteredContacts = contactList.filter((c) => {
       style={{
         minHeight: '100vh',
         background: '#E5EEE4',
-        paddingTop: 'clamp(70px, 10vw, 90px)',
+        paddingTop: '90px',
       }}
     >
       {/* Toast */}
@@ -373,35 +373,153 @@ const filteredContacts = contactList.filter((c) => {
         )}
       </AnimatePresence>
 
-      {/* Header */}
-      <div
+     {/* ───────── Animated Hero Header ───────── */}
+<div
+  style={{
+    background: '#C0E1D2',
+    padding: 'clamp(50px, 7vw, 80px) clamp(16px, 4vw, 24px)',
+    position: 'relative',
+    overflow: 'hidden',
+  }}
+>
+  {/* Animated background circles */}
+  {[...Array(3)].map((_, i) => (
+    <motion.div
+      key={i}
+      animate={{ scale: [1, 1.1, 1], opacity: [0.05, 0.12, 0.05] }}
+      transition={{ duration: 4 + i, repeat: Infinity }}
+      style={{
+        position: 'absolute',
+        borderRadius: '50%',
+        background: '#3E2C23',
+        width: `${250 + i * 100}px`,
+        height: `${250 + i * 100}px`,
+        left: `${10 + i * 25}%`,
+        top: `${-30 + i * 20}%`,
+        pointerEvents: 'none',
+      }}
+    />
+  ))}
+
+  <div
+    style={{
+      maxWidth: '1200px',
+      margin: '0 auto',
+      position: 'relative',
+      zIndex: 1,
+    }}
+  >
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7 }}
+    >
+      {/* Badge */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.2 }}
         style={{
-          background: '#C0E1D2',
-          padding: 'clamp(30px, 6vw, 50px) clamp(16px, 4vw, 24px)',
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '6px',
+          background: 'rgba(222, 128, 43, 0.15)',
+          border: '1px solid rgba(222, 128, 43, 0.3)',
+          borderRadius: '50px',
+          padding: '6px 14px',
+          fontSize: '12px',
+          color: '#DE802B',
+          marginBottom: '14px',
+          fontWeight: 700,
+          letterSpacing: '1px',
+          textTransform: 'uppercase',
         }}
       >
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <h1
-            style={{
-              fontSize: 'clamp(22px, 4vw, 32px)',
-              fontWeight: 800,
-              color: '#3E2C23',
-              marginBottom: '8px',
-            }}
-          >
-            🛡️ Admin Panel
-          </h1>
-          <p
-            style={{
-              color: '#3E2C23',
-              fontSize: 'clamp(13px, 2vw, 15px)',
-            }}
-          >
-            Manage hero, fees, services, gallery, bookings and messages
-          </p>
-        </div>
-      </div>
+        🛡️ Admin Control
+      </motion.div>
 
+      {/* Title */}
+      <h1
+        style={{
+          fontSize: 'clamp(26px, 4.5vw, 38px)',
+          fontWeight: 800,
+          color: '#3E2C23',
+          marginBottom: '8px',
+          letterSpacing: '-0.5px',
+          lineHeight: 1.2,
+        }}
+      >
+        Admin Panel
+      </h1>
+      <p
+        style={{
+          color: '#3E2C23',
+          fontSize: 'clamp(13px, 2vw, 15px)',
+          opacity: 0.8,
+          fontWeight: 500,
+          maxWidth: '600px',
+          lineHeight: 1.6,
+        }}
+      >
+        Manage hero images, consultation fees, services, gallery, bookings and
+        customer messages — all in one place
+      </p>
+
+      {/* Quick Stats Pills */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        style={{
+          display: 'flex',
+          gap: '10px',
+          marginTop: '20px',
+          flexWrap: 'wrap',
+        }}
+      >
+        {[
+          { label: 'Total Items', value: heroImagesList.length + serviceList.length + galleryList.length },
+          { label: 'Active Bookings', value: bookingList.filter(b => b.status === 'pending' || b.status === 'success').length },
+          { label: 'New Messages', value: contactList.length },
+        ].map((item, i) => (
+          <div
+            key={i}
+            style={{
+              background: 'rgba(62, 44, 35, 0.08)',
+              border: '1px solid rgba(62, 44, 35, 0.12)',
+              borderRadius: '50px',
+              padding: '6px 14px',
+              fontSize: '12px',
+              color: '#3E2C23',
+              fontWeight: 600,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+            }}
+          >
+            <span
+              style={{
+                background: '#DE802B',
+                color: '#3E2C23',
+                width: '22px',
+                height: '22px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: 800,
+                fontSize: '11px',
+              }}
+            >
+              {item.value}
+            </span>
+            {item.label}
+          </div>
+        ))}
+      </motion.div>
+    </motion.div>
+  </div>
+</div>
       <div
         style={{
           maxWidth: '1200px',
