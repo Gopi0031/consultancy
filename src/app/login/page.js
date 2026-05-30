@@ -1,6 +1,6 @@
 // src/app/login/page.js
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { signIn } from 'next-auth/react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/navigation'
@@ -23,6 +23,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const [isMobile, setIsMobile] = useState(false)
   const router = useRouter()
 
   const [form, setForm] = useState({
@@ -30,6 +31,13 @@ export default function LoginPage() {
     email: '',
     password: '',
   })
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -98,9 +106,9 @@ export default function LoginPage() {
         alignItems: 'center',
         justifyContent: 'center',
         background: '#C0E1D2',
-        padding: '90px 20px 40px',
-        margin:'90px',
-        borderRadius:'180px',
+        padding: isMobile ? '75px 12px 20px' : '90px 20px 40px',
+        margin: isMobile ? '0' : '90px',
+        borderRadius: isMobile ? '0' : '180px',
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -174,8 +182,10 @@ export default function LoginPage() {
         transition={{ duration: 0.6, type: 'spring', damping: 20 }}
         style={{
           background: '#FFFFFF',
-          borderRadius: '28px',
-          padding: 'clamp(28px, 5vw, 48px) clamp(24px, 4vw, 40px)',
+          borderRadius: isMobile ? '20px' : '28px',
+          padding: isMobile
+            ? '24px 18px'
+            : 'clamp(28px, 5vw, 48px) clamp(24px, 4vw, 40px)',
           width: '100%',
           maxWidth: '460px',
           boxShadow:
@@ -183,6 +193,7 @@ export default function LoginPage() {
           position: 'relative',
           zIndex: 10,
           border: '1px solid rgba(62,44,35,0.06)',
+          boxSizing: 'border-box',
         }}
       >
         {/* Top Decorative Bar */}
@@ -195,11 +206,11 @@ export default function LoginPage() {
             top: 0,
             left: 0,
             right: 0,
-            height: '6px',
+            height: isMobile ? '5px' : '6px',
             background:
               'linear-gradient(90deg, #DE802B 0%, #FFB870 50%, #DE802B 100%)',
-            borderTopLeftRadius: '28px',
-            borderTopRightRadius: '28px',
+            borderTopLeftRadius: isMobile ? '20px' : '28px',
+            borderTopRightRadius: isMobile ? '20px' : '28px',
             transformOrigin: 'left',
           }}
         />
@@ -211,15 +222,15 @@ export default function LoginPage() {
           transition={{ delay: 0.2, type: 'spring', damping: 12 }}
           style={{
             textAlign: 'center',
-            marginBottom: '14px',
+            marginBottom: isMobile ? '10px' : '14px',
           }}
         >
           <div
             style={{
-              width: '64px',
-              height: '64px',
+              width: isMobile ? '54px' : '64px',
+              height: isMobile ? '54px' : '64px',
               background: '#3E2C23',
-              borderRadius: '20px',
+              borderRadius: isMobile ? '16px' : '20px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -227,7 +238,7 @@ export default function LoginPage() {
               boxShadow: '0 10px 30px rgba(62,44,35,0.3)',
             }}
           >
-            <Globe size={32} color="#DE802B" />
+            <Globe size={isMobile ? 26 : 32} color="#DE802B" />
           </div>
         </motion.div>
 
@@ -238,7 +249,7 @@ export default function LoginPage() {
           transition={{ delay: 0.4 }}
           style={{
             textAlign: 'center',
-            fontSize: 'clamp(20px, 3vw, 24px)',
+            fontSize: isMobile ? '20px' : 'clamp(20px, 3vw, 24px)',
             fontWeight: 800,
             color: '#3E2C23',
             marginBottom: '6px',
@@ -255,10 +266,10 @@ export default function LoginPage() {
           transition={{ delay: 0.5 }}
           style={{
             textAlign: 'center',
-            fontSize: '13px',
+            fontSize: isMobile ? '12px' : '13px',
             color: '#3E2C23',
             opacity: 0.7,
-            marginBottom: '24px',
+            marginBottom: isMobile ? '18px' : '24px',
           }}
         >
           {mode === 'login'
@@ -274,9 +285,9 @@ export default function LoginPage() {
           style={{
             display: 'flex',
             background: '#E5EEE4',
-            borderRadius: '14px',
+            borderRadius: isMobile ? '12px' : '14px',
             padding: '5px',
-            marginBottom: '24px',
+            marginBottom: isMobile ? '18px' : '24px',
             position: 'relative',
           }}
         >
@@ -293,7 +304,7 @@ export default function LoginPage() {
               width: 'calc(50% - 5px)',
               height: 'calc(100% - 10px)',
               background: '#3E2C23',
-              borderRadius: '10px',
+              borderRadius: isMobile ? '8px' : '10px',
               boxShadow: '0 4px 12px rgba(62,44,35,0.2)',
             }}
           />
@@ -309,17 +320,18 @@ export default function LoginPage() {
               }}
               style={{
                 flex: 1,
-                padding: '11px',
+                padding: isMobile ? '10px' : '11px',
                 border: 'none',
                 background: 'transparent',
                 color: mode === m ? '#DE802B' : '#3E2C23',
                 fontWeight: 700,
                 cursor: 'pointer',
-                fontSize: '14px',
+                fontSize: isMobile ? '13px' : '14px',
                 textTransform: 'capitalize',
                 position: 'relative',
                 zIndex: 1,
                 transition: 'color 0.3s',
+                WebkitTapHighlightColor: 'transparent',
               }}
             >
               {m === 'login' ? ' Sign In' : ' Register'}
@@ -336,7 +348,11 @@ export default function LoginPage() {
             exit={{ opacity: 0, x: mode === 'login' ? 30 : -30 }}
             transition={{ duration: 0.3 }}
             onSubmit={mode === 'login' ? handleLogin : handleRegister}
-            style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: isMobile ? '12px' : '14px',
+            }}
           >
             {/* Name field (register only) */}
             <AnimatePresence>
@@ -348,14 +364,14 @@ export default function LoginPage() {
                   transition={{ duration: 0.3 }}
                   style={{ position: 'relative', overflow: 'hidden' }}
                 >
-                  <User size={18} style={iconStyle} />
+                  <User size={isMobile ? 16 : 18} style={iconStyle} />
                   <input
                     name="name"
                     value={form.name}
                     onChange={handleChange}
                     placeholder="Full Name"
                     required={mode === 'register'}
-                    style={inputStyle}
+                    style={isMobile ? mobileInputStyle : inputStyle}
                   />
                 </motion.div>
               )}
@@ -368,7 +384,7 @@ export default function LoginPage() {
               transition={{ delay: 0.1 }}
               style={{ position: 'relative' }}
             >
-              <Mail size={18} style={iconStyle} />
+              <Mail size={isMobile ? 16 : 18} style={iconStyle} />
               <input
                 name="email"
                 type="email"
@@ -376,7 +392,7 @@ export default function LoginPage() {
                 onChange={handleChange}
                 placeholder="Email Address"
                 required
-                style={inputStyle}
+                style={isMobile ? mobileInputStyle : inputStyle}
               />
             </motion.div>
 
@@ -387,7 +403,7 @@ export default function LoginPage() {
               transition={{ delay: 0.2 }}
               style={{ position: 'relative' }}
             >
-              <Lock size={18} style={iconStyle} />
+              <Lock size={isMobile ? 16 : 18} style={iconStyle} />
               <input
                 name="password"
                 type={showPass ? 'text' : 'password'}
@@ -395,11 +411,13 @@ export default function LoginPage() {
                 onChange={handleChange}
                 placeholder={
                   mode === 'register'
-                    ? 'Password (min. 6 characters)'
+                    ? isMobile
+                      ? 'Password (min 6 chars)'
+                      : 'Password (min. 6 characters)'
                     : 'Password'
                 }
                 required
-                style={{ ...inputStyle, paddingRight: '48px' }}
+                style={isMobile ? mobilePasswordInputStyle : passwordInputStyle}
               />
               <motion.button
                 type="button"
@@ -408,7 +426,7 @@ export default function LoginPage() {
                 onClick={() => setShowPass(!showPass)}
                 style={{
                   position: 'absolute',
-                  right: '14px',
+                  right: isMobile ? '12px' : '14px',
                   top: '50%',
                   transform: 'translateY(-50%)',
                   background: 'none',
@@ -419,9 +437,14 @@ export default function LoginPage() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   padding: '4px',
+                  WebkitTapHighlightColor: 'transparent',
                 }}
               >
-                {showPass ? <EyeOff size={18} /> : <Eye size={18} />}
+                {showPass ? (
+                  <EyeOff size={isMobile ? 16 : 18} />
+                ) : (
+                  <Eye size={isMobile ? 16 : 18} />
+                )}
               </motion.button>
             </motion.div>
 
@@ -435,10 +458,10 @@ export default function LoginPage() {
                   style={{
                     background: 'rgba(229,62,62,0.1)',
                     border: '1px solid rgba(229,62,62,0.3)',
-                    borderRadius: '12px',
-                    padding: '12px 16px',
+                    borderRadius: isMobile ? '10px' : '12px',
+                    padding: isMobile ? '10px 12px' : '12px 16px',
                     color: '#c53030',
-                    fontSize: '14px',
+                    fontSize: isMobile ? '12px' : '14px',
                     textAlign: 'center',
                     fontWeight: 600,
                   }}
@@ -453,10 +476,10 @@ export default function LoginPage() {
                   style={{
                     background: 'rgba(56,161,105,0.1)',
                     border: '1px solid rgba(56,161,105,0.3)',
-                    borderRadius: '12px',
-                    padding: '12px 16px',
+                    borderRadius: isMobile ? '10px' : '12px',
+                    padding: isMobile ? '10px 12px' : '12px 16px',
                     color: '#276749',
-                    fontSize: '14px',
+                    fontSize: isMobile ? '12px' : '14px',
                     textAlign: 'center',
                     fontWeight: 600,
                   }}
@@ -481,20 +504,21 @@ export default function LoginPage() {
                 background: loading ? 'rgba(62,44,35,0.4)' : '#DE802B',
                 color: '#3E2C23',
                 border: 'none',
-                padding: '16px',
-                borderRadius: '14px',
+                padding: isMobile ? '14px' : '16px',
+                borderRadius: isMobile ? '12px' : '14px',
                 fontWeight: 800,
-                fontSize: '15px',
+                fontSize: isMobile ? '14px' : '15px',
                 cursor: loading ? 'not-allowed' : 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '10px',
-                marginTop: '8px',
+                marginTop: isMobile ? '4px' : '8px',
                 boxShadow: loading
                   ? 'none'
                   : '0 8px 24px rgba(222, 128, 43, 0.4)',
                 transition: 'all 0.3s',
+                WebkitTapHighlightColor: 'transparent',
               }}
             >
               {loading ? (
@@ -521,7 +545,7 @@ export default function LoginPage() {
                     transition={{ duration: 1.5, repeat: Infinity }}
                     style={{ display: 'flex' }}
                   >
-                    <ArrowRight size={18} />
+                    <ArrowRight size={isMobile ? 16 : 18} />
                   </motion.span>
                 </>
               )}
@@ -534,9 +558,9 @@ export default function LoginPage() {
               transition={{ delay: 0.4 }}
               style={{
                 textAlign: 'center',
-                fontSize: '13px',
+                fontSize: isMobile ? '12px' : '13px',
                 color: '#3E2C23',
-                marginTop: '8px',
+                marginTop: isMobile ? '4px' : '8px',
                 opacity: 0.85,
               }}
             >
@@ -550,7 +574,7 @@ export default function LoginPage() {
                       setError('')
                       setSuccess('')
                     }}
-                    style={linkBtnStyle}
+                    style={isMobile ? mobileLinkBtnStyle : linkBtnStyle}
                   >
                     Create account
                   </button>
@@ -565,7 +589,7 @@ export default function LoginPage() {
                       setError('')
                       setSuccess('')
                     }}
-                    style={linkBtnStyle}
+                    style={isMobile ? mobileLinkBtnStyle : linkBtnStyle}
                   >
                     Sign in
                   </button>
@@ -575,91 +599,103 @@ export default function LoginPage() {
           </motion.form>
         </AnimatePresence>
 
-        {/* Demo Credentials Box */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
+        {/* ─── Demo Credentials — Side-by-side on mobile, stacked on desktop ─── */}
+        <div
           style={{
-            marginTop: '24px',
-            padding: '14px',
-            background: '#E5EEE4',
-            borderRadius: '12px',
-            border: '1px dashed rgba(62,44,35,0.2)',
+            display: isMobile ? 'grid' : 'block',
+            gridTemplateColumns: isMobile ? '1fr 1fr' : 'unset',
+            gap: isMobile ? '10px' : '0',
+            marginTop: isMobile ? '16px' : '0',
           }}
         >
-          <div
+          {/* Admin */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8 }}
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              fontSize: '11px',
-              color: '#DE802B',
-              fontWeight: 700,
-              marginBottom: '6px',
-              textTransform: 'uppercase',
-              letterSpacing: '1px',
+              marginTop: isMobile ? '0' : '24px',
+              padding: isMobile ? '10px 12px' : '14px',
+              background: '#E5EEE4',
+              borderRadius: isMobile ? '10px' : '12px',
+              border: '1px dashed rgba(62,44,35,0.2)',
             }}
           >
-            <Shield size={12} />Admin Demo Credentials
-          </div>
-          <div
-            style={{
-              fontSize: '12px',
-              color: '#3E2C23',
-              fontFamily: 'monospace',
-              lineHeight: 1.6,
-              opacity: 0.85,
-            }}
-          >
-            <div>📧 admin@consultancy.com</div>
-            <div>🔑 admin123</div>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontSize: isMobile ? '9px' : '11px',
+                color: '#DE802B',
+                fontWeight: 700,
+                marginBottom: '6px',
+                textTransform: 'uppercase',
+                letterSpacing: '1px',
+              }}
+            >
+              <Shield size={isMobile ? 10 : 12} />
+              {isMobile ? 'Admin Demo' : 'Admin Demo Credentials'}
+            </div>
+            <div
+              style={{
+                fontSize: isMobile ? '10px' : '12px',
+                color: '#3E2C23',
+                fontFamily: 'monospace',
+                lineHeight: 1.6,
+                opacity: 0.85,
+                wordBreak: isMobile ? 'break-all' : 'normal',
+              }}
+            >
+              <div>📧 admin@consultancy.com</div>
+              <div>🔑 admin123</div>
+            </div>
+          </motion.div>
 
-            
-          </div>
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
-          style={{
-            marginTop: '24px',
-            padding: '14px',
-            background: '#E5EEE4',
-            borderRadius: '12px',
-            border: '1px dashed rgba(62,44,35,0.2)',
-          }}
-        >
-          <div
+          {/* User */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8 }}
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              fontSize: '11px',
-              color: '#DE802B',
-              fontWeight: 700,
-              marginBottom: '6px',
-              textTransform: 'uppercase',
-              letterSpacing: '1px',
+              marginTop: isMobile ? '0' : '24px',
+              padding: isMobile ? '10px 12px' : '14px',
+              background: '#E5EEE4',
+              borderRadius: isMobile ? '10px' : '12px',
+              border: '1px dashed rgba(62,44,35,0.2)',
             }}
           >
-            <Shield size={12} /> User Demo Credentials
-          </div>
-          <div
-            style={{
-              fontSize: '12px',
-              color: '#3E2C23',
-              fontFamily: 'monospace',
-              lineHeight: 1.6,
-              opacity: 0.85,
-            }}
-          >
-            <div>📧 user@consultancy.com</div>
-            <div>🔑 user123</div>
-
-            
-          </div>
-        </motion.div>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontSize: isMobile ? '9px' : '11px',
+                color: '#DE802B',
+                fontWeight: 700,
+                marginBottom: '6px',
+                textTransform: 'uppercase',
+                letterSpacing: '1px',
+              }}
+            >
+              <Shield size={isMobile ? 10 : 12} />{' '}
+              {isMobile ? 'User Demo' : 'User Demo Credentials'}
+            </div>
+            <div
+              style={{
+                fontSize: isMobile ? '10px' : '12px',
+                color: '#3E2C23',
+                fontFamily: 'monospace',
+                lineHeight: 1.6,
+                opacity: 0.85,
+                wordBreak: isMobile ? 'break-all' : 'normal',
+              }}
+            >
+              <div>📧 user@consultancy.com</div>
+              <div>🔑 user123</div>
+            </div>
+          </motion.div>
+        </div>
       </motion.div>
 
       {/* CSS for floating icons (desktop only) */}
@@ -674,9 +710,13 @@ export default function LoginPage() {
   )
 }
 
+// ─── DESKTOP / TABLET Styles (UNCHANGED from original) ───
 const inputStyle = {
   width: '100%',
-  padding: '14px 14px 14px 46px',
+  paddingTop: '14px',
+  paddingBottom: '14px',
+  paddingLeft: '46px',
+  paddingRight: '14px',
   border: '1.5px solid rgba(62,44,35,0.12)',
   borderRadius: '12px',
   background: '#E5EEE4',
@@ -687,6 +727,35 @@ const inputStyle = {
   boxSizing: 'border-box',
   fontWeight: 500,
   fontFamily: 'inherit',
+}
+
+const passwordInputStyle = {
+  ...inputStyle,
+  paddingRight: '48px',
+}
+
+// ─── MOBILE-ONLY Styles ───
+const mobileInputStyle = {
+  width: '100%',
+  paddingTop: '12px',
+  paddingBottom: '12px',
+  paddingLeft: '40px',
+  paddingRight: '12px',
+  border: '1.5px solid rgba(62,44,35,0.12)',
+  borderRadius: '10px',
+  background: '#E5EEE4',
+  color: '#3E2C23',
+  fontSize: '14px',
+  outline: 'none',
+  transition: 'all 0.2s',
+  boxSizing: 'border-box',
+  fontWeight: 500,
+  fontFamily: 'inherit',
+}
+
+const mobilePasswordInputStyle = {
+  ...mobileInputStyle,
+  paddingRight: '42px',
 }
 
 const iconStyle = {
@@ -708,4 +777,9 @@ const linkBtnStyle = {
   textUnderlineOffset: '3px',
   fontSize: '13px',
   padding: 0,
-} 
+}
+
+const mobileLinkBtnStyle = {
+  ...linkBtnStyle,
+  fontSize: '12px',
+}
